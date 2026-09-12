@@ -2,13 +2,13 @@ import pytest
 import geckodriver_autoinstaller
 
 from pages.main_page import MainPage
-#from pages.order_page import OrderPage
+from pages.order_page import OrderPage
 from selenium import webdriver
 
 
 @pytest.fixture(scope="function")
 def driver():
-    geckodriver_autoinstaller.install()
+    #geckodriver_autoinstaller.install()
     driver = webdriver.Firefox()
     yield driver
     driver.quit()
@@ -19,8 +19,8 @@ def main_page(driver):
     page.timeout = 10
     return page
 
-#@pytest.fixture(scope="function")
-#def order_page(driver):
+@pytest.fixture(scope="function")
+def order_page(driver):
     page = OrderPage(driver)
     page.timeout = 10
     return page

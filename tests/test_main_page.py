@@ -5,8 +5,8 @@ from data import ANSWERS_DATA
 from urls import URL_MAIN_PAGE
 
 
+@allure. description('Ищем вопрос и проверяем его ответ')
 @allure.title('Тесты на проверку вопросов')
-#@allure. description('')
 class TestMainPage:
 
     @pytest.mark.parametrize(

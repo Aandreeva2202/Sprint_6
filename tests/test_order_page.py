@@ -1,12 +1,14 @@
+import allure
 import pytest
 
-from pages.base_page import BasePage
 from locators.main_page_locators import MainPageLocators
 from data import *
-from urls import BASE_URL
+from urls import URL_MAIN_PAGE
 
 
-class TestOrderPage(BasePage):
+@allure.title('Тесты на проверку заказа самоката')
+@allure. description('Проверяем заказ самоката с двумя наборами данных')
+class TestOrderPage:
 
     @pytest.mark.parametrize(
         'locator, order_data',
@@ -18,9 +20,9 @@ class TestOrderPage(BasePage):
         ] 
     )
     def test_create_order(self, order_page, locator, order_data):
-        order_page.go_to_url(BASE_URL)
+        order_page.go_to_url(URL_MAIN_PAGE)
         order_page.scroll_to_element(locator)
         order_page.click_to_element(locator)
         order_page.set_order(order_data)
-        assert order_page.get_text_from_element(locator) == 'text'
+        assert 'Заказ оформлен' in order_page.check_order()
         

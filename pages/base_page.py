@@ -1,5 +1,6 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import random
+
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -8,7 +9,7 @@ class BasePage:
 
     def __init__(self, driver): 
         self.driver = driver
-        self.timeout = 5
+        self.timeout = 15
         self.wait = WebDriverWait(self.driver, self.timeout)
 
     def go_to_url(self, url):
@@ -22,10 +23,13 @@ class BasePage:
         self.wait.until(expected_conditions.element_to_be_clickable(some))
         self.driver.find_element(*some).click()
 
-    #ожидание текста на элементе
-    def wait_text(self, locator, text):
-        self.wait.until_not(expected_conditions.text_to_be_present_in_element_value(locator, text))
-        return self.driver.find_element(*locator).text
+    def click_to_enter(self, locator):
+        element = self.wait.until(expected_conditions.element_to_be_clickable(locator))
+        element.send_keys(Keys.ENTER)
+
+    def scroll_to_element(self, locator):
+        scroll_element = self.find_element_with_wait(locator)
+        self.driver.execute_script("arguments[0].scrollIntoView();", scroll_element)
 
     #добавить текст на элемент
     def add_text_to_element(self, locator, text):
@@ -44,3 +48,18 @@ class BasePage:
     def swith_to_another_window(self):
         windows_list = self.driver.window_handles
         self.driver.switch_to.window(windows_list[-1]) 
+
+    def select_option_click(self, locator):
+        # Ждём появления опций в выпадающем списке
+        options = WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_all_elements_located((locator)))
+        # Кликаем по нужной опции (первая подходящая)
+        for option in options:
+            if "Сокол" in option.text:
+                option.click()
+                break
+
+    def select_random(self, locator):
+        WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_all_elements_located((locator)))
+        elements =  self.driver.find_elements(*locator)
+        random_option = random.choice(elements)
+        random_option.click()
